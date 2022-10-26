@@ -58,11 +58,6 @@ function selectSize(e) {
 
   data.currentSize = +chooseNum;
   data.$bottomLine.querySelector('.puzzle__choose-size span').innerText = `${chooseNum}x${chooseNum}`;
-  data.timerData = {
-      minutes: 0,
-      seconds: 0
-  }
-
   renderMatrix();
 }
 function renderMatrix() {
@@ -354,12 +349,13 @@ function setTimer() {
 
 function resetValues() {
   data.savedMoves = 0;
-  data.savedTime = '00:00';
   data.initedTimer = false;
-
   data.$infoLine.querySelector('.puzzle__info-moves span').innerText = 0;
   data.$infoLine.querySelector('.puzzle__info-time span').innerText = '00:00';
-
+  data.timerData = {
+    minutes: 0,
+    seconds: 0
+}
   clearInterval(data.timer);
 }
 
