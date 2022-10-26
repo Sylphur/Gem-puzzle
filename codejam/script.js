@@ -38,7 +38,7 @@ function init() {
   renderMatrix();
   data.$topButtons.querySelector('.puzzle__start-button').addEventListener('click', startGame);
   data.$winPopup.querySelector('button').addEventListener('click', startGame);
-  data.$sizes.childNodes[data.savedSize ? data.savedSize - 3 : 0].dispatchEvent(new Event('click', {bubbles: true}));
+  data.$sizes.childNodes[1].dispatchEvent(new Event('click', {bubbles: true}));
 }
 function startGame(e) {
   resetValues();
@@ -69,7 +69,7 @@ function selectSize(e) {
 function renderMatrix() {
     data.$box.innerHTML = '';
     resetValues();
-    const counts = 9;
+    const counts = 16;
 
     const $items = (new Array(counts)).fill(1).map((_, k) => {
       const $i = document.createElement('div');
@@ -79,8 +79,8 @@ function renderMatrix() {
       $i.dataset.index = '' + (k + 1);
       $i.innerHTML = `<span>${k + 1}</span>`;
 
-      $i.originalX = k % 3 + 1;
-      $i.originalY = Math.floor(k / 3) + 1;
+      $i.originalX = k % 4 + 1;
+      $i.originalY = Math.floor(k / 4) + 1;
 
       if (k === counts - 1) {
           $i.classList.add('empty');
@@ -95,8 +95,8 @@ function renderMatrix() {
   $shuffledItems.forEach((i, k) => {
       data.$box.append(i);
 
-      i.style.width = (100 / 3) + '%';
-      i.style.height = (100 / 3) + '%';
+      i.style.width = (100 / 4) + '%';
+      i.style.height = (100 / 4) + '%';
 
       i.addEventListener('click', e => {
           e.preventDefault();
@@ -230,9 +230,9 @@ function shuffle(array) { //ломать генерацию тут. TODO: чит
 }
 
 function setStartPosition(node, index) {
-  const val = 100 / 3;
-  node.currentX = (index % 3) + 1;
-  node.currentY = Math.floor(index / 3) + 1;
+  const val = 100 / 4;
+  node.currentX = (index % 4) + 1;
+  node.currentY = Math.floor(index / 4) + 1;
   node.style.left = (node.currentX - 1) * val + '%';
   node.style.top = (node.currentY - 1) * val + '%';
 }
