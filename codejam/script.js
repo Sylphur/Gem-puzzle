@@ -28,50 +28,47 @@ function renderMatrix() {
     const counts = 9;
 
     const $items = (new Array(counts)).fill(1).map((_, k) => {
-        const $i = document.createElement('div');
+      const $i = document.createElement('div');
 
-        $i.classList.add('puzzle__box-item');
-        $i.dataset.index = '' + (k + 1);
-        $i.innerHTML = `<span>${k + 1}</span>`;
-        if (k === counts - 1) {
-            $i.classList.add('empty');
-            $empty = $i;
-        }
+      $i.classList.add('puzzle__box-item');
+      $i.draggable = true;
+      $i.dataset.index = '' + (k + 1);
+      $i.innerHTML = `<span>${k + 1}</span>`;
 
-        return $i;
-        
-    });
+      $i.originalX = k % 3 + 1;
+      $i.originalY = Math.floor(k / 3) + 1;
 
-    const $shuffledItems = shuffle($items);
+      if (k === counts - 1) {
+          $i.classList.add('empty');
+          $empty = $i;
+      }
 
-    $shuffledItems.forEach((i, k) => {
-        data.$box.append(i);
+      return $i;
+  });
 
-        i.style.width = (100 / 3) + '%';
-        i.style.height = (100 / 3) + '%';
+  const $shuffledItems = shuffle($items);
 
-        i.addEventListener('click', e => {
-            e.preventDefault();
+  $shuffledItems.forEach((i, k) => {
+      data.$box.append(i);
 
-            const isMoved = isMoveOnClick(i);
+      i.style.width = (100 / 3) + '%';
+      i.style.height = (100 / 3) + '%';
 
-            if (isMoved) {
-                getMoveItem(i);
-            }
-        });
+      i.addEventListener('click', e => {
+          e.preventDefault();
 
-        setStartPosition(i, k);
-    });
+          const isMoved = isMoveOnClick(i);
 
-    data.$items = $shuffledItems;
-}
+          if (isMoved) {
+              getMoveItem(i);
+          }
+      });
 
-function setStartPosition(node, index) {
-  const val = 100 / 3;
-  node.currentX = (index % 3) + 1;
-  node.currentY = Math.floor(index / 3) + 1;
-  node.style.left = (node.currentX - 1) * val + '%';
-  node.style.top = (node.currentY - 1) * val + '%';
+      setStartPosition(i, k);
+  });
+
+  data.$items = $shuffledItems;
+
 }
 
 // Create Elements
@@ -161,13 +158,62 @@ function createTopPopup() {
     return $box;
 }
 
-// Shuffle
+//helpers
+
 function shuffle(array) {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1));
-      [newArray[i], newArray[j]] = [newArray[j], newArray[i]]; //слом шафла = генерация победы, если будет время сделать чит-кнопку
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]]; // TODO: чит-кнопка слома шаффла ради быстрой победы
   }
 
   return newArray;
+}
+
+function setStartPosition(node, index) {
+  const val = 100 / 3;
+  node.currentX = (index % 3) + 1;
+  node.currentY = Math.floor(index / 3) + 1;
+  node.style.left = (node.currentX - 1) * val + '%';
+  node.style.top = (node.currentY - 1) * val + '%';
+}
+
+function isMoveOnClick(node) {
+  if (node.currentX === $empty.currentX && Math.abs(node.currentY - $empty.currentY) === 1) return true;
+  if (node.currentY === $empty.currentY && Math.abs(node.currentX - $empty.currentX) === 1) return true;
+
+  return false;
+}
+
+function getMoveItem(node, transition) {
+  if (transition !== false) {
+      node.classList.add('transition');
+  }
+
+  const tempX = node.currentX;
+  const tempY = node.currentY;
+  const tempStyle = node.getAttribute('style');
+
+  node.currentX = $empty.currentX;
+  node.currentY = $empty.currentY;
+
+  $empty.currentX = tempX;
+  $empty.currentY = tempY;
+
+  node.setAttribute('style', $empty.getAttribute('style'));
+  $empty.setAttribute('style', tempStyle);
+
+  node.classList.remove('not_transition');
+
+  addMoves();
+
+  setTimeout(() => {
+      node.classList.remove('transition');
+  }, 400);
+
+  if ($empty.currentY === $empty.originalY && $empty.currentX === $empty.originalX) {
+      if (checkWinGame()) {
+          showWinPopup();
+      }
+  }
 }
