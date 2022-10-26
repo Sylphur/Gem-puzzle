@@ -27,10 +27,17 @@ function init() {
       if ($mute) {
           toggleMute($mute);
       }
+
+      if ($start) {
+          startGame();
+      }
   });
   renderMatrix();
+  data.$topButtons.querySelector('.puzzle__start-button').addEventListener('click', startGame);
 }
-
+function startGame(e) {
+  renderMatrix();
+}
 function renderMatrix() {
 
     data.$box.innerHTML = '';
@@ -302,4 +309,19 @@ function playSound() {
   data.audio.pause();
   data.audio.currentTime = 0;
   data.audio.play();
+}
+function resetValues() {
+  data.savedMoves = 0;
+  window.localStorage.setItem('gem_moves', 0);
+  data.savedTime = '00:00';
+  window.localStorage.setItem('gem_time', '00:00');
+  data.savedGame = null;
+  window.localStorage.setItem('gem_game', null);
+
+  data.initedTimer = false;
+
+  data.$infoLine.querySelector('.puzzle__info-moves span').innerText = 0;
+  data.$infoLine.querySelector('.puzzle__info-time span').innerText = '00:00';
+
+  clearInterval(data.timer);
 }
