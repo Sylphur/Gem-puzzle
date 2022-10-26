@@ -69,6 +69,8 @@ function renderMatrix() {
 
   data.$items = $shuffledItems;
 
+  setDrag();
+
 }
 
 // Create Elements
@@ -216,4 +218,45 @@ function getMoveItem(node, transition) {
           showWinPopup();
       }
   }
+}
+
+function setDrag() {
+  let currentItem = null;
+  data.$items.forEach((i) => {
+
+      i.addEventListener('dragstart', e => {
+          if (!isMoveOnClick(i)) {
+              e.preventDefault();
+              return;
+          }
+          setTimeout(() => {
+              i.classList.add('hide');
+          }, 0);
+
+          currentItem = i;
+      });
+
+      i.addEventListener('dragend', e => {
+          i.classList.remove('hide');
+
+          currentItem = null;
+      });
+  });
+
+  $empty.addEventListener('dragenter', e => {
+      $empty.classList.add('_enter')
+  })
+
+  $empty.addEventListener('dragleave', e => {
+      $empty.classList.remove('_enter')
+  })
+
+  $empty.addEventListener('dragover', e => {
+      e.preventDefault();
+  })
+
+  $empty.addEventListener('drop', e => {
+      getMoveItem(currentItem, false);
+      $empty.classList.remove('_enter')
+  })
 }
