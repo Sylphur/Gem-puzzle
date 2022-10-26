@@ -7,6 +7,7 @@ const data = {
     onVolume: true,
     initedTimer: false,
     savedMoves: 0,
+    currentSize: 4,
     $topButtons: createTopButtons(),
     $sizes: createSizes(),
     $box: createPuzzleBox(),
@@ -35,7 +36,6 @@ function init() {
           startGame();
       }
   });
-  renderMatrix();
   data.$topButtons.querySelector('.puzzle__start-button').addEventListener('click', startGame);
   data.$winPopup.querySelector('button').addEventListener('click', startGame);
   data.$sizes.childNodes[1].dispatchEvent(new Event('click', {bubbles: true}));
@@ -56,12 +56,11 @@ function selectSize(e) {
   data.$sizes.childNodes.forEach(i => i.classList.remove('active'));
   $target.classList.add('active');
 
-  data.savedSize = +chooseNum;
+  data.currentSize = +chooseNum;
   data.$bottomLine.querySelector('.puzzle__choose-size span').innerText = `${chooseNum}x${chooseNum}`;
-
   data.timerData = {
-      minutes: +0,
-      seconds: +0
+      minutes: 0,
+      seconds: 0
   }
 
   renderMatrix();
@@ -69,7 +68,7 @@ function selectSize(e) {
 function renderMatrix() {
     data.$box.innerHTML = '';
     resetValues();
-    const counts = 16;
+    const counts = data.currentSize ** 2;
 
     const $items = (new Array(counts)).fill(1).map((_, k) => {
       const $i = document.createElement('div');
@@ -79,8 +78,8 @@ function renderMatrix() {
       $i.dataset.index = '' + (k + 1);
       $i.innerHTML = `<span>${k + 1}</span>`;
 
-      $i.originalX = k % 4 + 1;
-      $i.originalY = Math.floor(k / 4) + 1;
+      $i.originalX = k % data.currentSize + 1;
+      $i.originalY = Math.floor(k / data.currentSize) + 1;
 
       if (k === counts - 1) {
           $i.classList.add('empty');
@@ -95,8 +94,8 @@ function renderMatrix() {
   $shuffledItems.forEach((i, k) => {
       data.$box.append(i);
 
-      i.style.width = (100 / 4) + '%';
-      i.style.height = (100 / 4) + '%';
+      i.style.width = (100 / data.currentSize) + '%';
+      i.style.height = (100 / data.currentSize) + '%';
 
       i.addEventListener('click', e => {
           e.preventDefault();
@@ -217,7 +216,9 @@ function createTopPopup() {
     return $box;
 }
 
-//helpers
+
+
+
 
 function shuffle(array) { //ломать генерацию тут. TODO: чит-кнопка для быстрой провери попапа
   const newArray = [...array];
@@ -230,9 +231,9 @@ function shuffle(array) { //ломать генерацию тут. TODO: чит
 }
 
 function setStartPosition(node, index) {
-  const val = 100 / 4;
-  node.currentX = (index % 4) + 1;
-  node.currentY = Math.floor(index / 4) + 1;
+  const val = 100 / data.currentSize;
+  node.currentX = (index % data.currentSize) + 1;
+  node.currentY = Math.floor(index / data.currentSize) + 1;
   node.style.left = (node.currentX - 1) * val + '%';
   node.style.top = (node.currentY - 1) * val + '%';
 }
