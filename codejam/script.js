@@ -37,11 +37,13 @@ function init() {
   });
   renderMatrix();
   data.$topButtons.querySelector('.puzzle__start-button').addEventListener('click', startGame);
+  data.$winPopup.querySelector('button').addEventListener('click', startGame);
   data.$sizes.childNodes[data.savedSize ? data.savedSize - 3 : 0].dispatchEvent(new Event('click', {bubbles: true}));
 }
 function startGame(e) {
   resetValues();
   renderMatrix();
+  data.$winPopup.classList.remove('opened');
 }
 function selectSize(e) {
   const $target = e.target.closest('.puzzle__sizes-item');
@@ -217,11 +219,11 @@ function createTopPopup() {
 
 //helpers
 
-function shuffle(array) {
+function shuffle(array) { //ломать генерацию тут. TODO: чит-кнопка для быстрой провери попапа
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1));
-      [newArray[i], newArray[j]] = [newArray[j], newArray[i]]; // TODO: чит-кнопка слома шаффла ради быстрой победы
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
   }
 
   return newArray;
@@ -336,6 +338,7 @@ function playSound() {
   data.audio.currentTime = 0;
   data.audio.play();
 }
+
 function setTimer() {
   data.timerData.seconds += 1;
 
@@ -347,6 +350,7 @@ function setTimer() {
   const res = `${data.timerData.minutes < 10 ? 0 : ''}${data.timerData.minutes}:${data.timerData.seconds < 10 ? 0 : ''}${data.timerData.seconds}`;
   data.$infoLine.querySelector('.puzzle__info-time span').innerText = res;
 }
+
 function resetValues() {
   data.savedMoves = 0;
   data.savedTime = '00:00';
@@ -356,4 +360,14 @@ function resetValues() {
   data.$infoLine.querySelector('.puzzle__info-time span').innerText = '00:00';
 
   clearInterval(data.timer);
+}
+
+function checkWinGame() {
+  return data.$items.every(i => i.currentY === i.originalY && i.currentX === i.originalX);
+}
+function showWinPopup() {
+  data.$winPopup.querySelector('._move').innerText = data.savedMoves;
+  data.$winPopup.querySelector('._time').innerText = `${data.timerData.minutes < 10 ? 0 : ''}${data.timerData.minutes}:${data.timerData.seconds < 10 ? 0 : ''}${data.timerData.seconds}`;
+  clearInterval(data.timer);
+  data.$winPopup.classList.add('opened')
 }
