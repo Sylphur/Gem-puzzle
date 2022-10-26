@@ -23,6 +23,7 @@ body > * {
 .puzzle__title {
   text-align: center;
   font-size: 40px;
+  margin-top: 0;
 }
 .puzzle__sizes-list {
 	display: grid;
@@ -223,9 +224,6 @@ body > * {
 	}
 }
 @media screen and (max-width: 388px){
-  .puzzle__title {
-    margin-top: 10px;
-  }
   .puzzle__mute-button {
     margin-left: 100px;
   }
