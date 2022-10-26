@@ -8,6 +8,7 @@ const data = {
     initedTimer: false,
     savedMoves: 0,
     currentSize: 4,
+    cheat: false,
     $topButtons: createTopButtons(),
     $sizes: createSizes(),
     $box: createPuzzleBox(),
@@ -39,8 +40,12 @@ function init() {
   data.$topButtons.querySelector('.puzzle__start-button').addEventListener('click', startGame);
   data.$winPopup.querySelector('button').addEventListener('click', startGame);
   data.$sizes.childNodes[1].dispatchEvent(new Event('click', {bubbles: true}));
+  data.$bottomLine.querySelector('.puzzle__top').addEventListener('click', () => {
+    data.cheat = true;
+    startGame();
+  });
 }
-function startGame(e) {
+function startGame() {
   resetValues();
   renderMatrix();
   data.$winPopup.classList.remove('opened');
@@ -185,7 +190,7 @@ function createBottomLine() {
     const $box = document.createElement('div');
     $box.classList.add('puzzle__bottom-line');
 
-    $box.innerHTML = `<div class="puzzle__choose-size">Size: <span>4x4</span></div><button class="puzzle__top">Top Results</button>`
+    $box.innerHTML = `<div class="puzzle__choose-size">Size: <span>4x4</span></div><button class="puzzle__top">Cheat button</button>`
 
     app.append($box);
 
@@ -217,6 +222,10 @@ function createTopPopup() {
 
 function shuffle(array) { //ломать генерацию тут. TODO: чит-кнопка для быстрой провери попапа
   const newArray = [...array];
+  if (data.cheat) {
+    data.cheat = false;
+    return newArray;
+  }
   for (let i = newArray.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1));
       [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
