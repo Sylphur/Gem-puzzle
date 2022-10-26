@@ -20,7 +20,10 @@ body > * {
   border-radius: 1%;
   background: #fff;
 }
-
+.puzzle__title {
+  text-align: center;
+  font-size: 40px;
+}
 .puzzle__sizes-list {
 	display: grid;
 	grid-template-columns: repeat(6, 1fr);
@@ -218,4 +221,12 @@ body > * {
 	.puzzle {
 		padding : 48px 32px;
 	}
+}
+@media screen and (max-width: 388px){
+  .puzzle__title {
+    margin-top: 10px;
+  }
+  .puzzle__mute-button {
+    margin-left: 100px;
+  }
 }

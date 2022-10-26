@@ -9,9 +9,10 @@ const data = {
     savedMoves: 0,
     currentSize: 4,
     cheat: false,
+    $puzzleTitile: createPuzzleTitle(),
     $topButtons: createTopButtons(),
-    $sizes: createSizes(),
     $box: createPuzzleBox(),
+    $sizes: createSizes(),
     $infoLine: createInfoGame(),
     $bottomLine: createBottomLine(),
     $winPopup: createWinPopup(),
@@ -130,6 +131,12 @@ function createRoot() {
   $root.classList.add('puzzle');
   $root.id = "root";
   document.body.append($root);
+}
+function createPuzzleTitle() {
+  const $title = document.createElement('h1');
+  $title.classList.add('puzzle__title');
+  $title.innerHTML = 'RSS Gem Puzzle';
+  app.append($title);
 }
 function createSizes() {
     const sizesValue = [3, 4, 5, 6, 7, 8];
