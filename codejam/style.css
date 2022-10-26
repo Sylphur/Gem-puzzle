@@ -90,8 +90,6 @@ body > * {
 	box-sizing: border-box;
 	left : 0;
 	top : 0;
-  width: 33.3%;
-  height: 33.3%;
 	border: 1px solid #fff;
 	background : #d6d4d0;
 	cursor : pointer;
