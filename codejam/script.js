@@ -39,15 +39,31 @@ function renderMatrix() {
         }
 
         return $i;
+        
     });
 
-    $items.forEach((i, k) => {
+    const $shuffledItems = shuffle($items);
+
+    $shuffledItems.forEach((i, k) => {
         data.$box.append(i);
 
         i.style.width = (100 / 3) + '%';
         i.style.height = (100 / 3) + '%';
+
+        i.addEventListener('click', e => {
+            e.preventDefault();
+
+            const isMoved = isMoveOnClick(i);
+
+            if (isMoved) {
+                getMoveItem(i);
+            }
+        });
+
         setStartPosition(i, k);
     });
+
+    data.$items = $shuffledItems;
 }
 
 function setStartPosition(node, index) {
@@ -145,3 +161,13 @@ function createTopPopup() {
     return $box;
 }
 
+// Shuffle
+function shuffle(array) {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]]; //слом шафла = генерация победы, если будет время сделать чит-кнопку
+  }
+
+  return newArray;
+}
