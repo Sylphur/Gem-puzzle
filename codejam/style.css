@@ -1,0 +1,223 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap');
+
+body {
+	font-family: 'Montserrat', sans-serif;
+	background: #cccccc;
+}
+
+body > * {
+	user-select: none;
+}
+
+.puzzle {
+	max-width: 600px;
+	margin-left : auto;
+	margin-right : auto;
+	box-sizing: border-box;
+	padding : 24px 16px;
+	user-select: none;
+  border: solid 1px;
+  border-radius: 1%;
+  background: #fff;
+}
+
+.puzzle__sizes-list {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	grid-column-gap: 8px;
+	margin-bottom : 16px;
+}
+
+.puzzle__sizes-item {
+	padding : 4px;
+	margin : 0;
+	border: none;
+	cursor: pointer;
+	font-size : 14px;
+	line-height : 1.5;
+	background: #bce4e5;
+	font-weight: 500;
+	border-radius: 4px;
+}
+
+.puzzle__sizes-item.active {
+	background : #0d9095;
+	color: #fff;
+}
+
+.puzzle__top-buttons {
+	display: flex;
+	margin-bottom : 12px;
+}
+
+.puzzle__mute-button {
+	padding : 0;
+	margin : 0 0 0 145px;
+	border: none;
+	outline: none;
+	width : 40px;
+	height : 40px;
+	border-radius: 4px;
+	cursor: pointer;
+	background: #0d9095 url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16 21c3.527-1.547 5.999-4.909 5.999-9S19.527 4.547 16 3v2c2.387 1.386 3.999 4.047 3.999 7 0 2.953-1.612 5.614-3.999 7v2Z' fill='%23fff'/%3E%3Cpath d='M16 7v10c1.225-1.1 2-3.228 2-5 0-1.77-.775-3.9-2-5ZM4 17h2.697L14 21.87V2.133L6.697 7H4c-1.103 0-2 .897-2 2v6c0 1.103.897 2 2 2Z' fill='%23fff'/%3E%3C/svg%3E") center center no-repeat;
+}
+
+.puzzle__mute-button.mute {
+	background: #a72525 url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m7.727 6.314-4.02-4.02-1.414 1.414 18 18 1.414-1.414-2.02-2.02A9.578 9.578 0 0 0 21.999 12c0-4.091-2.472-7.453-5.999-9v2c2.387 1.386 3.999 4.047 3.999 7a8.13 8.13 0 0 1-1.671 4.914l-1.286-1.286C17.644 14.537 18 13.19 18 12c0-1.771-.775-3.9-2-5v7.586l-2-2V2.133l-6.273 4.18ZM4 17h2.697L14 21.869v-3.747L3.102 7.224A1.995 1.995 0 0 0 2 9v6c0 1.103.897 2 2 2Z' fill='%23fff'/%3E%3C/svg%3E") center center no-repeat;
+}
+
+.puzzle__start-button {
+	cursor: pointer;
+	padding : 0;
+	margin : 0;
+	flex: 1 0 1%;
+	font-weight : 600;
+	background: #0d9095;
+	border: none;
+	color: #fff;
+	border-radius: 4px;
+}
+
+.puzzle__box {
+	position : relative;
+	padding-top : 100%;
+	margin : 0 0 16px;
+	background : #fff;
+}
+
+.puzzle__box-item {
+	position : absolute;
+	box-sizing: border-box;
+	left : 0;
+	top : 0;
+  width: 33.3%;
+  height: 33.3%;
+	border: 1px solid #fff;
+	background : #d6d4d0;
+	cursor : pointer;
+	transition: none;
+  font-weight: bold;
+}
+
+.puzzle__box-item.transition {
+	transition: all 0.4s;
+}
+
+.puzzle__box-item.hide {
+	display : none;
+}
+
+.puzzle__box-item.empty {
+	background : transparent;
+	font-size : 0;
+	cursor: inherit;
+}
+
+.puzzle__box-item.empty._enter {
+	background : rgba(0,0,0,.06);
+}
+
+.puzzle__box-item span {
+	display: flex;
+	position : absolute;
+	left : 0;
+	right : 0;
+	top : 0;
+	bottom : 0;
+	align-items: center;
+	justify-content: center;
+}
+
+.puzzle__info-box, .puzzle__bottom-line {
+	display: flex;
+	justify-content: space-between;
+	font-size: 16px;
+	margin-bottom : 16px;
+	font-weight : 500;
+}
+
+.puzzle__info-box span, .puzzle__bottom-line span {
+	font-weight : 600;
+}
+
+.puzzle__bottom-line {
+	align-items: center;
+	margin-bottom : 0;
+}
+
+.puzzle__top {
+	cursor: pointer;
+	padding : 11px 22px;
+	margin : 0;
+	font-weight : 600;
+	background: #0d9095;
+	border: none;
+	color: #fff;
+	border-radius: 4px;
+}
+
+.puzzle__win-popup {
+	position: fixed;
+	left : 0;
+	right : 0;
+	top : 0;
+	bottom : 0;
+	background : rgba(0,0,0,.7);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding : 16px;
+	opacity : 0;
+	transition: opacity 0.4s;
+	pointer-events: none;
+	line-height : 1.7;
+}
+
+.puzzle__win-popup.opened {
+	opacity : 1;
+	pointer-events: all;
+}
+
+.puzzle__win-box {
+	flex: none;
+	width: 100%;
+	max-width: 300px;
+	background : #fff;
+	padding : 32px 24px;
+	border-radius: 12px;
+	border: 3px solid forestgreen;
+	font-size: 16px;
+	text-align : center;
+}
+
+.puzzle__win-box button {
+	display : block;
+	width : 100%;
+	box-sizing: border-box;
+	cursor: pointer;
+	padding: 11px 22px;
+	margin: 16px 0 0 0;
+	font-weight: 600;
+	background: #6babca;
+	border: none;
+	color: #fff;
+	border-radius: 4px;
+}
+
+
+@media all and (min-width: 600px) {
+	.puzzle {
+		padding : 32px;
+	}
+
+	.puzzle__sizes-list {
+		grid-column-gap: 16px;
+		margin-bottom : 16px;
+	}
+}
+
+@media all and (min-width: 960px) {
+	.puzzle {
+		padding : 48px 32px;
+	}
+}
