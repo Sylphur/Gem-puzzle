@@ -5,6 +5,8 @@ let $empty = null;
 const data = {
     audio: new Audio('assets/click_try_3.mp3'),
     onVolume: true,
+    initedTimer: false,
+    savedMoves: 0,
     $topButtons: createTopButtons(),
     $sizes: createSizes(),
     $box: createPuzzleBox(),
@@ -16,6 +18,7 @@ const data = {
 init();
 
 function init() {
+    data.$sizes.addEventListener('click', selectSize);
     data.$topButtons.addEventListener('click', function (e) {
       const $mute = e.target.closest('.puzzle__mute-button');
       const $start = e.target.closest('.puzzle__start-button');
@@ -34,13 +37,36 @@ function init() {
   });
   renderMatrix();
   data.$topButtons.querySelector('.puzzle__start-button').addEventListener('click', startGame);
+  data.$sizes.childNodes[data.savedSize ? data.savedSize - 3 : 0].dispatchEvent(new Event('click', {bubbles: true}));
 }
 function startGame(e) {
+  resetValues();
+  renderMatrix();
+}
+function selectSize(e) {
+  const $target = e.target.closest('.puzzle__sizes-item');
+  if (!$target) return;
+
+  e.preventDefault();
+
+  const chooseNum = $target.dataset['index'];
+
+  data.$sizes.childNodes.forEach(i => i.classList.remove('active'));
+  $target.classList.add('active');
+
+  data.savedSize = +chooseNum;
+  data.$bottomLine.querySelector('.puzzle__choose-size span').innerText = `${chooseNum}x${chooseNum}`;
+
+  data.timerData = {
+      minutes: +0,
+      seconds: +0
+  }
+
   renderMatrix();
 }
 function renderMatrix() {
-
     data.$box.innerHTML = '';
+    resetValues();
     const counts = 9;
 
     const $items = (new Array(counts)).fill(1).map((_, k) => {
@@ -310,14 +336,20 @@ function playSound() {
   data.audio.currentTime = 0;
   data.audio.play();
 }
+function setTimer() {
+  data.timerData.seconds += 1;
+
+  if (data.timerData.seconds === 60) {
+      data.timerData.seconds = 0;
+      data.timerData.minutes += 1;
+  }
+
+  const res = `${data.timerData.minutes < 10 ? 0 : ''}${data.timerData.minutes}:${data.timerData.seconds < 10 ? 0 : ''}${data.timerData.seconds}`;
+  data.$infoLine.querySelector('.puzzle__info-time span').innerText = res;
+}
 function resetValues() {
   data.savedMoves = 0;
-  window.localStorage.setItem('gem_moves', 0);
   data.savedTime = '00:00';
-  window.localStorage.setItem('gem_time', '00:00');
-  data.savedGame = null;
-  window.localStorage.setItem('gem_game', null);
-
   data.initedTimer = false;
 
   data.$infoLine.querySelector('.puzzle__info-moves span').innerText = 0;
