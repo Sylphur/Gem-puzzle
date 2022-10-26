@@ -1,13 +1,10 @@
-const $root = document.createElement('div');
-$root.classList.add('puzzle');
-$root.id = "root";
-document.body.append($root);
-
+createRoot();
 const app = document.querySelector('#root');
 let $empty = null;
 
-
 const data = {
+    audio: new Audio('assets/click_try_3.mp3'),
+    onVolume: true,
     $topButtons: createTopButtons(),
     $sizes: createSizes(),
     $box: createPuzzleBox(),
@@ -19,7 +16,19 @@ const data = {
 init();
 
 function init() {
-    renderMatrix();
+    data.$topButtons.addEventListener('click', function (e) {
+      const $mute = e.target.closest('.puzzle__mute-button');
+      const $start = e.target.closest('.puzzle__start-button');
+
+      if (!$mute && !$start) return;
+
+      e.preventDefault();
+
+      if ($mute) {
+          toggleMute($mute);
+      }
+  });
+  renderMatrix();
 }
 
 function renderMatrix() {
@@ -72,9 +81,22 @@ function renderMatrix() {
   setDrag();
 
 }
+function toggleMute(node) {
+  if (data.onVolume) {
+      node.classList.add('mute');
+  } else {
+      node.classList.remove('mute');
+  }
 
+  data.onVolume = !data.onVolume;
+}
 // Create Elements
-
+function createRoot() {
+  const $root = document.createElement('div');
+  $root.classList.add('puzzle');
+  $root.id = "root";
+  document.body.append($root);
+}
 function createSizes() {
     const sizesValue = [3, 4, 5, 6, 7, 8];
     let $parent = document.createElement('div');
@@ -205,6 +227,10 @@ function getMoveItem(node, transition) {
   node.setAttribute('style', $empty.getAttribute('style'));
   $empty.setAttribute('style', tempStyle);
 
+  if (data.onVolume) {
+    playSound();
+  }
+
   node.classList.remove('not_transition');
 
   addMoves();
@@ -219,6 +245,17 @@ function getMoveItem(node, transition) {
       }
   }
 }
+
+function addMoves() {
+  if (!data.initedTimer) {
+      data.timer = setInterval(setTimer, 1000);
+      data.initedTimer = true;
+  }
+
+  data.savedMoves = +data.savedMoves + 1;
+  window.localStorage.setItem('gem_moves', data.savedMoves);
+  data.$infoLine.querySelector('.puzzle__info-moves span').innerText = data.savedMoves
+;}
 
 function setDrag() {
   let currentItem = null;
@@ -259,4 +296,10 @@ function setDrag() {
       getMoveItem(currentItem, false);
       $empty.classList.remove('_enter')
   })
+}
+
+function playSound() {
+  data.audio.pause();
+  data.audio.currentTime = 0;
+  data.audio.play();
 }
